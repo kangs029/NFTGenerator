@@ -27,8 +27,17 @@ public class NFTGenerator {
      *
      * If total possible unique combinations < k, returns all combinations.
      */
-    public static List<List<String>> generateUniqueObjects(List<List<String>> properties, int k) {
-        if(properties==null ||k<=0) return new ArrayList<>();
+    public static List<List<String>> generateUniqueKObjects(List<List<String>> properties, int k) {
+        if(k<=0) return new ArrayList<>();
+
+        List<List<String>> all = generateUniqueObjects(properties);
+
+        int take = Math.min(k, all.size());
+        return new ArrayList<>(all.subList(0, take));
+    }
+    //helper to get unique objects
+    private static List<List<String>> generateUniqueObjects(List<List<String>> properties) {
+        if(properties==null) return new ArrayList<>();
 
         for (List<String> prop : properties) {
             if (prop == null || prop.isEmpty()) {
@@ -42,9 +51,7 @@ public class NFTGenerator {
         buildAll(properties, 0, current, all);
 
         Collections.shuffle(all);
-
-        int take = Math.min(k, all.size());
-        return new ArrayList<>(all.subList(0, take));
+        return all;
     }
 
     // recursive helper to enumerate cartesian product
@@ -73,7 +80,7 @@ public class NFTGenerator {
         }
 
         int n=12;
-        List<List<String>> result = generateUniqueObjects(properties, n);
+        List<List<String>> result = generateUniqueKObjects(properties, n);
         System.out.println("\nRequested n = " + n + ", returning = " + result.size());
         for (List<String> obj : result) {
             System.out.println(obj);
